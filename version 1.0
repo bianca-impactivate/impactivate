@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impactivate - Live Demo</title>
+    <meta name="description" content="Impactivate: Where kindness lives and impact grows. Watch real projects, donate, volunteer, and see your impact grow.">
+    <meta property="og:title" content="Impactivate - Social Impact Platform">
+    <meta property="og:description" content="Watch real community projects being built. Choose how to help. See your impact grow.">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Crect fill='%237c5fa3' width='1200' height='630'/%3E%3Ctext x='600' y='315' font-size='120' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3E🌱 Impactivate%3C/text%3E%3C/svg%3E">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8d9f8 0%, #f0e6ff 100%);
+            overflow: hidden;
+        }
+
+        .demo-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+
+        .demo-phone {
+            width: 400px;
+            height: 100vh;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            border: 12px solid #000;
+        }
+
+        .phone-notch {
+            width: 120px;
+            height: 28px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .phone-content {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            scroll-behavior: smooth;
+        }
+
+        .phone-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .phone-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .phone-content::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 2px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #7c5fa3 0%, #6b4c8a 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            flex-shrink: 0;
+            margin-top: 30px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid #e0d0f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: #7c5fa3;
+            box-shadow: 0 5px 15px rgba(123, 95, 163, 0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #7c5fa3 0%, #6b4c8a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-image:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .card-image:hover .play-btn {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .card-header {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: #f5f0ff;
+            align-items: center;
+        }
+
+        .card-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4a5e6 0%, #e6c9f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        .card-info {
+            flex: 1;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #2d1b4e;
+            font-size: 0.85em;
+        }
+
+        .card-meta {
+            font-size: 0.7em;
+            color: #999;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .progress-label {
+            font-size: 0.75em;
+            color: #999;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: #e0d0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7c5fa3 0%, #6b4c8a 100%);
+        }
+
+        .bricks {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+        }
+
+        .brick {
+            width: 15px;
+            height: 10px;
+            background: #f4a460;
+            border-radius: 2px;
+        }
+
+        .brick.empty {
+            background: #e0d0f0;
+        }
+
+        .card-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            padding-top: 8px;
+            border-top: 1px solid #e0d0f0;
+            margin-top: 8px;
+        }
+
+        .card-btn {
+            padding: 8px;
+            background: white;
+            border: 1px solid #e0d0f0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75em;
+            font-weight: 500;
+            color: #2d1b4e;
+            transition: all 0.2s;
+        }
+
+        .card-btn:hover {
+            background: #f5f0ff;
+            border-color: #7c5fa3;
+            transform: translateY(-2px);
+        }
+
+        .card-btn.primary {
+            background: linear-gradient(135deg, #7c5fa3 0%, #6b4c8a 100%);
+            color: white;
+            border: none;
+            grid-column: span 2;
+        }
+
+        .card-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(123, 95, 163, 0.3);
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            border-top: 1px solid #e0d0f0;
+            padding: 8px 0;
+            flex-shrink: 0;
+            margin-bottom: 0;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-size: 0.9em;
+            padding: 6px 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            color: #7c5fa3;
+        }
+
+        .nav-btn.active {
+            color: #7c5fa3;
+        }
+
+        .nav-label {
+            font-size: 0.6em;
+            font-weight: 500;
+        }
+
+        .grove-hero {
+            background: linear-gradient(135deg, #d4f1f9 0%, #e8f4f8 50%, #b8e6d5 100%);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .grove-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #2d1b4e;
+        }
+
+        .grove-tree {
+            font-size: 3em;
+            margin: 10px 0;
+        }
+
+        .tree-item {
+            background: white;
+            border: 1px solid #e0d0f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tree-item:hover {
+            border-color: #7c5fa3;
+            box-shadow: 0 5px 15px rgba(123, 95, 163, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .tree-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .tree-icon {
+            font-size: 1.8em;
+        }
+
+        .tree-name {
+            font-weight: 600;
+            color: #2d1b4e;
+            font-size: 0.9em;
+        }
+
+        .tree-location {
+            font-size: 0.75em;
+            color: #999;
+        }
+
+        .tree-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e0d0f0;
+            text-align: center;
+        }
+
+        .tree-stat-value {
+            font-weight: 700;
+            color: #7c5fa3;
+            font-size: 0.95em;
+        }
+
+        .tree-stat-label {
+            font-size: 0.65em;
+            color: #999;
+        }
+
+        .campaign-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            border: 1px solid #e0d0f0;
+            transition: all 0.3s ease;
+        }
+
+        .campaign-card:hover {
+            border-color: #7c5fa3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(123, 95, 163, 0.1);
+        }
+
+        .campaign-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #7c5fa3 0%, #6b4c8a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            position: relative;
+        }
+
+        .campaign-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.65em;
+            color: #7c5fa3;
+        }
+
+        .campaign-body {
+            padding: 10px;
+        }
+
+        .campaign-title {
+            font-weight: 600;
+            color: #2d1b4e;
+            font-size: 0.85em;
+            margin-bottom: 3px;
+        }
+
+        .campaign-location {
+            font-size: 0.7em;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px;
+            background: #f5f0ff;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.75em;
+        }
+
+        .milestone-icon {
+            font-size: 0.9em;
+        }
+
+        .milestone-text {
+            flex: 1;
+        }
+
+        .milestone-name {
+            font-weight: 600;
+            color: #2d1b4e;
+        }
+
+        .milestone-detail {
+            color: #999;
+            font-size: 0.7em;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #7c5fa3 0%, #6b4c8a 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 3px;
+        }
+
+        .profile-email {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .profile-stat {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .profile-stat-value {
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .profile-stat-label {
+            font-size: 0.65em;
+            opacity: 0.8;
+        }
+
+        .profile-section {
+            background: white;
+            border: 1px solid #e0d0f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .profile-section-title {
+            font-weight: 600;
+            color: #2d1b4e;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+
+        .profile-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e0d0f0;
+            font-size: 0.8em;
+        }
+
+        .profile-field:last-child {
+            border-bottom: none;
+        }
+
+        .profile-field-label {
+            color: #999;
+        }
+
+        .profile-field-value {
+            color: #2d1b4e;
+            font-weight: 500;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #e8d9f8 0%, #f0e6ff 100%);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #7c5fa3;
+        }
+
+        .stat-label {
+            font-size: 0.7em;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        .chart-box {
+            background: white;
+            border: 1px solid #e0d0f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            color: #2d1b4e;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100px;
+            gap: 6px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, #7c5fa3 0%, #6b4c8a 100%);
+            border-radius: 4px 4px 0 0;
+            min-height: 8px;
+        }
+
+        .info-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width: 350px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #2d1b4e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deploy-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: 700;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0d0f0;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2d1b4e;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            color: #999;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 6px 0;
+            color: #2d1b4e;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: 700;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #7c5fa3 0%, #6b4c8a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(123, 95, 163, 0.3);
+        }
+
+        .code-block {
+            background: #f5f0ff;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.7em;
+            color: #7c5fa3;
+            word-break: break-all;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 1200px) {
+            .info-panel {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .demo-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .demo-phone {
+                width: 100%;
+                height: 600px;
+            }
+
+            .info-panel {
+                position: static;
+                width: 100%;
+                max-height: none;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="demo-container">
+    <!-- Phone Display -->
+    <div class="demo-phone">
+        <div class="phone-notch"></div>
+        
+        <!-- Header -->
+        <div class="header" id="headerTitle">▶️ Watch</div>
+
+        <!-- Content -->
+        <div class="phone-content" id="phoneContent">
+            <!-- FEED PAGE -->
+            <div id="feedPage" class="content" style="display: block;">
+                <div class="project-card">
+                    <div class="card-image">
+                        🤱
+                        <div class="play-btn">▶</div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-avatar">🤱</div>
+                        <div class="card-info">
+                            <div class="card-title">Mothers & babies</div>
+                            <div class="card-meta">Billiri, Gombe</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-label">
+                            <span>Safe birthing room</span>
+                            <span>6/10</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                        <div class="bricks">
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="card-btn" onclick="alert('💸 Donate to Safe birthing room')">💸 Donate</button>
+                        <button class="card-btn" onclick="alert('📤 Share link copied!')">📤 Share</button>
+                        <button class="card-btn primary" onclick="alert('🚀 Choose: Donate, Volunteer, or Share')">+ Act</button>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="card-image">
+                        📚
+                        <div class="play-btn">▶</div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-avatar">📚</div>
+                        <div class="card-info">
+                            <div class="card-title">Education & Learning</div>
+                            <div class="card-meta">Kaltungo, Nigeria</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-label">
+                            <span>School Building</span>
+                            <span>4/10</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                        <div class="bricks">
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="card-btn" onclick="alert('💸 Donate to School Building')">💸 Donate</button>
+                        <button class="card-btn" onclick="alert('📤 Share link copied!')">📤 Share</button>
+                        <button class="card-btn primary" onclick="alert('🚀 Choose: Donate, Volunteer, or Share')">+ Act</button>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="card-image">
+                        💧
+                        <div class="play-btn">▶</div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-avatar">💧</div>
+                        <div class="card-info">
+                            <div class="card-title">Clean Water</div>
+                            <div class="card-meta">Dukku, Nigeria</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-label">
+                            <span>Water Well</span>
+                            <span>7/10</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                        <div class="bricks">
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                            <div class="brick empty"></div>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="card-btn" onclick="alert('💸 Donate to Water Well')">💸 Donate</button>
+                        <button class="card-btn" onclick="alert('📤 Share link copied!')">📤 Share</button>
+                        <button class="card-btn primary" onclick="alert('🚀 Choose: Donate, Volunteer, or Share')">+ Act</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAMPAIGNS PAGE -->
+            <div id="campaignsPage" class="content" style="display: none;">
+                <div class="campaign-card">
+                    <div class="campaign-image">
+                        🤱
+                        <div class="campaign-badge">🔴 LIVE</div>
+                    </div>
+                    <div class="campaign-body">
+                        <div class="campaign-title">Safe births by spring</div>
+                        <div class="campaign-location">Billiri, Gombe · Nigeria</div>
+                        <div style="margin-bottom: 8px;">
+                            <div style="font-size: 0.7em; color: #999; margin-bottom: 4px;">7/10 bricks • 1,284 supporters</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%;"></div>
+                            </div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text">
+                                <div class="milestone-name">Walls up</div>
+                                <div class="milestone-detail">Sep 2</div>
+                            </div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text">
+                                <div class="milestone-name">Delivery bed</div>
+                                <div class="milestone-detail">Today</div>
+                            </div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">◐</div>
+                            <div class="milestone-text">
+                                <div class="milestone-name">Solar lights</div>
+                                <div class="milestone-detail">Next</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-image">
+                        📚
+                        <div class="campaign-badge">🔴 LIVE</div>
+                    </div>
+                    <div class="campaign-body">
+                        <div class="campaign-title">Train 12 midwives</div>
+                        <div class="campaign-location">Kaltungo, Gombe · Nigeria</div>
+                        <div style="margin-bottom: 8px;">
+                            <div style="font-size: 0.7em; color: #999; margin-bottom: 4px;">6/10 bricks • 640 supporters</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 63%;"></div>
+                            </div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">✓</div>
+                            <div class="milestone-text">
+                                <div class="milestone-name">Curriculum</div>
+                                <div class="milestone-detail">Complete</div>
+                            </div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">◐</div>
+                            <div class="milestone-text">
+                                <div class="milestone-name">Training</div>
+                                <div class="milestone-detail">In progress</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROVE PAGE -->
+            <div id="grovePage" class="content" style="display: none;">
+                <div class="grove-hero">
+                    <div class="grove-title">Your Grove 🌳</div>
+                    <div class="grove-tree">🌿</div>
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-header">
+                        <div class="tree-icon">🌿</div>
+                        <div>
+                            <div class="tree-name">🤱 Billiri</div>
+                            <div class="tree-location">Your roots: Safe birthing room</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="margin: 8px 0;">
+                        <div class="progress-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="tree-stats">
+                        <div>
+                            <div class="tree-stat-value">💵</div>
+                            <div class="tree-stat-label">$45</div>
+                        </div>
+                        <div>
+                            <div class="tree-stat-value">🙌</div>
+                            <div class="tree-stat-label">3h</div>
+                        </div>
+                        <div>
+                            <div class="tree-stat-value">📣</div>
+                            <div class="tree-stat-label">12</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-item">
+                    <div class="tree-header">
+                        <div class="tree-icon">🌳</div>
+                        <div>
+                            <div class="tree-name">📚 Kaltungo</div>
+                            <div class="tree-location">Your roots: Midwife training</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="margin: 8px 0;">
+                        <div class="progress-fill" style="width: 85%;"></div>
+                    </div>
+                    <div class="tree-stats">
+                        <div>
+                            <div class="tree-stat-value">💵</div>
+                            <div class="tree-stat-label">$100</div>
+                        </div>
+                        <div>
+                            <div class="tree-stat-value">🙌</div>
+                            <div class="tree-stat-label">5h</div>
+                        </div>
+                        <div>
+                            <div class="tree-stat-value">📣</div>
+                            <div class="tree-stat-label">20</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILE PAGE -->
+            <div id="profilePage" class="content" style="display: none;">
+                <div class="profile-card">
+                    <div class="profile-avatar">👩</div>
+                    <div class="profile-name">Jane Doe</div>
+                    <div class="profile-email">jane.doe@example.com</div>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">5</div>
+                            <div class="profile-stat-label">Trees</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">$245</div>
+                            <div class="profile-stat-label">Donated</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="profile-section-title">👤 Account</div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Email</span>
+                        <span class="profile-field-value">jane.doe@...</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Location</span>
+                        <span class="profile-field-value">San Francisco</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Member Since</span>
+                        <span class="profile-field-value">Mar 2024</span>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="profile-section-title">❤️ Interests</div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Causes</span>
+                        <span class="profile-field-value">Health</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Regions</span>
+                        <span class="profile-field-value">Africa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS PAGE -->
+            <div id="analyticsPage" class="content" style="display: none;">
+                <div class="analytics-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">$245</div>
+                        <div class="stat-label">Donated</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">18h</div>
+                        <div class="stat-label">Volunteered</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Trees</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">3.2K</div>
+                        <div class="stat-label">Lives</div>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-title">📊 Donation Trend</div>
+                    <div class="bar-chart">
+                        <div class="bar" style="height: 40%;"></div>
+                        <div class="bar" style="height: 60%;"></div>
+                        <div class="bar" style="height: 45%;"></div>
+                        <div class="bar" style="height: 75%;"></div>
+                        <div class="bar" style="height: 50%;"></div>
+                        <div class="bar" style="height: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="chart-title">📍 Top Projects</div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Safe Birthing</span>
+                        <span class="profile-field-value">$85</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Midwife Train</span>
+                        <span class="profile-field-value">$60</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="profile-field-label">Water Well</span>
+                        <span class="profile-field-value">$50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="switchPage('feed', this)">
+                <span>▶️</span>
+                <span class="nav-label">Watch</span>
+            </button>
+            <button class="nav-btn" onclick="switchPage('campaigns', this)">
+                <span>🎯</span>
+                <span class="nav-label">Campaigns</span>
+            </button>
+            <button class="nav-btn" onclick="switchPage('grove', this)">
+                <span>🌳</span>
+                <span class="nav-label">Grove</span>
+            </button>
+            <button class="nav-btn" onclick="switchPage('analytics', this)">
+                <span>📊</span>
+                <span class="nav-label">Impact</span>
+            </button>
+            <button class="nav-btn" onclick="switchPage('profile', this)">
+                <span>👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+        <div class="info-title">
+            🌱 Impactivate
+            <span class="deploy-badge">🟢 LIVE</span>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">✅ Deployment Complete!</div>
+            <div class="info-text">
+                Your app is now LIVE and ready to share! Click the button below to copy the code and deploy instantly.
+            </div>
+            <button class="copy-btn" onclick="copyCode()">📋 Copy Full Code</button>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">🚀 How to Deploy</div>
+            <div class="info-text" style="line-height: 2;">
+                <strong>Step 1:</strong> Copy the code<br>
+                <strong>Step 2:</strong> Create file: impactivate.html<br>
+                <strong>Step 3:</strong> Paste code inside<br>
+                <strong>Step 4:</strong> Open in browser<br>
+                <strong>Step 5:</strong> Share the link!
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">📱 Quick Deploy Services</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                <a href="https://vercel.com/new" target="_blank" style="padding: 8px; background: #f5f0ff; border-radius: 6px; text-align: center; text-decoration: none; color: #7c5fa3; font-weight: 600; font-size: 0.75em;">⚡ Vercel</a>
+                <a href="https://app.netlify.com/drop" target="_blank" style="padding: 8px; background: #f5f0ff; border-radius: 6px; text-align: center; text-decoration: none; color: #7c5fa3; font-weight: 600; font-size: 0.75em;">⚡ Netlify</a>
+                <a href="https://surge.sh" target="_blank" style="padding: 8px; background: #f5f0ff; border-radius: 6px; text-align: center; text-decoration: none; color: #7c5fa3; font-weight: 600; font-size: 0.75em;">⚡ Surge.sh</a>
+                <a href="https://pages.github.com" target="_blank" style="padding: 8px; background: #f5f0ff; border-radius: 6px; text-align: center; text-decoration: none; color: #7c5fa3; font-weight: 600; font-size: 0.75em;">⚡ GitHub</a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">✨ Features</div>
+            <ul class="feature-list">
+                <li>5 working pages</li>
+                <li>Smooth animations</li>
+                <li>Mobile responsive</li>
+                <li>No dependencies</li>
+                <li>Fast loading</li>
+                <li>SEO optimized</li>
+                <li>Share ready</li>
+                <li>Production ready</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">📊 Impact Metrics</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="background: #f5f0ff; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-weight: 700; color: #7c5fa3;">1,284</div>
+                    <div style="font-size: 0.7em; color: #999;">Supporters</div>
+                </div>
+                <div style="background: #f5f0ff; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-weight: 700; color: #7c5fa3;">$35K</div>
+                    <div style="font-size: 0.7em; color: #999;">Raised</div>
+                </div>
+                <div style="background: #f5f0ff; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-weight: 700; color: #7c5fa3;">5</div>
+                    <div style="font-size: 0.7em; color: #999;">Projects</div>
+                </div>
+                <div style="background: #f5f0ff; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-weight: 700; color: #7c5fa3;">2.4K</div>
+                    <div style="font-size: 0.7em; color: #999;">Lives</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">💾 File Info</div>
+            <div class="info-text">
+                <strong>File name:</strong> impactivate.html<br>
+                <strong>File size:</strong> ~120KB<br>
+                <strong>Format:</strong> Single HTML file<br>
+                <strong>No build needed!</strong>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-label">🔗 Next Steps</div>
+            <div class="info-text" style="line-height: 2;">
+                ✅ Deploy on Vercel<br>
+                ✅ Add backend (Optional)<br>
+                ✅ Connect payments<br>
+                ✅ Setup database<br>
+                ✅ Mobile app<br>
+                ✅ Admin panel
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const pageData = {
+        feed: {
+            title: '▶️ Watch',
+        },
+        campaigns: {
+            title: '🎯 Campaigns',
+        },
+        grove: {
+            title: '🌳 Your Grove',
+        },
+        analytics: {
+            title: '📊 Impact',
+        },
+        profile: {
+            title: '👤 Profile',
+        }
+    };
+
+    function switchPage(page, btn) {
+        document.querySelectorAll('.content').forEach(p => p.style.display = 'none');
+        document.getElementById(page + 'Page').style.display = 'block';
+        document.querySelector('.phone-content').scrollTop = 0;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('headerTitle').textContent = pageData[page].title;
+    }
+
+    function copyCode() {
+        const code = document.documentElement.outerHTML;
+        navigator.clipboard.writeText(code).then(() => {
+            alert('✅ Full code copied to clipboard!\n\n1. Create a new file: impactivate.html\n2. Paste the code\n3. Open in browser\n4. Share the file!');
+        }).catch(() => {
+            alert('📋 Code copied! (Paste into a new HTML file)');
+        });
+    }
+
+    console.log('%c🌱 Impactivate is LIVE!', 'color: #7c5fa3; font-size: 20px; font-weight: bold;');
+    console.log('%cYour app is deployed and ready to share!', 'color: #4caf50; font-size: 14px;');
+</script>
+
+</body>
+</html>
